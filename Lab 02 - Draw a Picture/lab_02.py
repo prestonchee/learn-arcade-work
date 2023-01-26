@@ -55,7 +55,7 @@ arcade.draw_triangle_filled(415, 335, 415, 345, 410, 340, arcade.color.PURPLE_NA
 arcade.draw_ellipse_filled(405, 340, 13, 8, arcade.color.PURPLE_NAVY)
 
 # create fish #3
-arcade.draw_triangle_filled(512, 250, 512, 260, 518, 255, arcade.color.BLUEBERRY)
+arcade.draw_triangle_filled(512, 250, 512, 260, 518, 255, arcade.color.RED)
 # body
 arcade.draw_ellipse_filled(522, 255, 13, 8, arcade.color.BLUEBERRY)
 

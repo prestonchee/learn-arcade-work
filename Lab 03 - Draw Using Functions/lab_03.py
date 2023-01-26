@@ -48,6 +48,12 @@ def draw_fish(x,y):
     # body
     arcade.draw_ellipse_filled(x - 10, y + 5, 13, 8, arcade.csscolor.ORANGE)
 
+def draw_fish_rev(x, y):
+    # create fish #3
+    arcade.draw_triangle_filled(x, y, x, y + 10, x + 5, y + 5, arcade.color.YELLOW)
+    # body
+    arcade.draw_ellipse_filled(x + 10, y + 5, 13, 8, arcade.color.YELLOW)
+
 def draw_tree():
     arcade.draw_rectangle_filled(120, 280, 20, 80, arcade.csscolor.SIENNA)
     arcade.draw_polygon_filled(((120, 360), (100, 320), (90, 280), (150, 280), (140, 320)), arcade.csscolor.DARK_GREEN)
@@ -71,10 +77,14 @@ def on_draw(delta_time):
     if (on_draw.fish2_x == 350):
         on_draw.fish2_x = 540
 
-
+    draw_fish_rev(on_draw.fish3_x , 260)
+    on_draw.fish3_x += 1
+    if (on_draw.fish3_x == 580):
+        on_draw.fish3_x = 345
 
 on_draw.fish1_x = 450
 on_draw.fish2_x = 540
+on_draw.fish3_x = 345
 def main():
     arcade.open_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Drawing With Functions")
     # ready to draw
