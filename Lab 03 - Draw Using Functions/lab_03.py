@@ -43,7 +43,6 @@ def draw_fisherman():
 
 #Draw fish that faces to the left
 def draw_fish(x,y):
-    arcade.draw_point(x, y, arcade.color.RED, 8)
     #Tail
     arcade.draw_triangle_filled(x, y, x, y + 10, x - 5, y + 5, arcade.color.ORANGE)
     # body
