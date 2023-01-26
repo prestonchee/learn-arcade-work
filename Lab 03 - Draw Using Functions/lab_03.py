@@ -41,6 +41,7 @@ def draw_fisherman():
     # fishing line
     arcade.draw_line(317, 310, 400, 200, arcade.color.BLACK, 1)
 
+#Draw fish that faces to the left
 def draw_fish(x,y):
     arcade.draw_point(x, y, arcade.color.RED, 8)
     #Tail
@@ -48,16 +49,19 @@ def draw_fish(x,y):
     # body
     arcade.draw_ellipse_filled(x - 10, y + 5, 13, 8, arcade.csscolor.ORANGE)
 
+#Draw fish that faces to the right
 def draw_fish_rev(x, y):
     # create fish #3
     arcade.draw_triangle_filled(x, y, x, y + 10, x + 5, y + 5, arcade.color.YELLOW)
     # body
     arcade.draw_ellipse_filled(x + 10, y + 5, 13, 8, arcade.color.YELLOW)
 
+#Draw tree
 def draw_tree():
     arcade.draw_rectangle_filled(120, 280, 20, 80, arcade.csscolor.SIENNA)
     arcade.draw_polygon_filled(((120, 360), (100, 320), (90, 280), (150, 280), (140, 320)), arcade.csscolor.DARK_GREEN)
 
+# method that puts everything together
 def on_draw(delta_time):
     # ready to draw
     arcade.start_render()
@@ -68,6 +72,8 @@ def on_draw(delta_time):
     draw_tree()
     draw_fish(on_draw.fish1_x, 200)
 
+#increaase or decrease the fish position
+#when fish hits desired x value reset the fish
     on_draw.fish1_x -= 1
     if (on_draw.fish1_x == 330):
         on_draw.fish1_x = 450
@@ -82,9 +88,12 @@ def on_draw(delta_time):
     if (on_draw.fish3_x == 580):
         on_draw.fish3_x = 345
 
+#fish x values set
 on_draw.fish1_x = 450
 on_draw.fish2_x = 540
 on_draw.fish3_x = 345
+
+#main method
 def main():
     arcade.open_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Drawing With Functions")
     # ready to draw
