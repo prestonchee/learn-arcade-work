@@ -51,9 +51,10 @@ def draw_fish(x,y):
 #Draw fish that faces to the right
 def draw_fish_rev(x, y):
     # create fish #3
-    arcade.draw_triangle_filled(x, y, x, y + 10, x + 5, y + 5, arcade.color.YELLOW)
+    arcade.draw_triangle_filled(x, y, x, y + 10, x + 5, y + 5, arcade.color.PURPLE)
     # body
-    arcade.draw_ellipse_filled(x + 10, y + 5, 13, 8, arcade.color.YELLOW)
+    arcade.draw_ellipse_filled(x + 10, y + 5, 13, 8, arcade.color.PURPLE)
+
 
 #Draw tree
 def draw_tree():
