@@ -6,14 +6,14 @@ Camel Game
 """
 import random
 
-# main method
+# Main method
 def main():
     print('Welcome to Camel!')
     print('You have stolen a camel to make your way across the great Mobi desert.')
     print('The natives want their camel back and are chasing you down! Survive your')
     print('desert trek and out run the natives.')
 
-    # initiated variables
+    # Initiated variables
     done = False
     miles_traveled = 210
     thirst = 5
@@ -21,7 +21,7 @@ def main():
     natives_distance = -20
     canteen_amount = 3
 
-    # main loop runs until done is true
+    # Main loop runs until done is true
     while not done:
         print('A. Drink from your canteen.')
         print('B. Ahead moderate speed.')
@@ -30,10 +30,10 @@ def main():
         print('E. Status check.')
         print('Q. Quit.')
 
-        # prompt for user choice
+        # Prompt for user choice
         user_choice = input('What is your choice.')
 
-        # run if loops for each choice made and the consequences of those choices
+        # Run if loops for each choice made and the consequences of those choices
         if user_choice.upper() == 'Q':
             done = True
             print('Thanks for Playing.')
@@ -55,7 +55,7 @@ def main():
             camel_tiredness += 3
             natives_distance += 9
 
-            # generate a random number for chance to discover an oasis
+            # Generate a random number for chance to discover an oasis
             if random.randrange(19) == 7 and not done:
                 print('You have found an Oasis! Canteen will be refilled.')
                 canteen_amount = 3
@@ -67,7 +67,7 @@ def main():
             camel_tiredness += 1
             natives_distance += 7
 
-            # generate a random number for chance to discover an oasis
+            # Generate a random number for chance to discover an oasis
             if random.randrange(19) == 7 and not done:
                 print('You have found an Oasis! Canteen will be refilled.')
                 canteen_amount = 3
@@ -80,7 +80,7 @@ def main():
             else:
                 print('You have no water in your canteen.')
 
-        # create warnings if the native are close or have caught you, or if you have escaped
+        # Create warnings if the native are close or have caught you, or if you have escaped
         # Put this first so if you win the game won't print out that you are tired, ect..
         if natives_distance >= miles_traveled:
             print('You have been caught by the natives.')
@@ -91,18 +91,19 @@ def main():
             print('Congrats you have won the game and escaped from the natives!')
             done = True
 
-        # create warning when you ar getting to thirsty
+        # Create warning when you ar getting to thirsty
         if 6 >= thirst > 4 and not done:
             print('You are getting thirsty.')
         elif thirst > 6and not done:
             print('You have died of thrist.')
             done = True
 
-        # create warnings when camel is getting tired
+        # Create warnings when camel is getting tired
         if 8 >= camel_tiredness > 5 and not done:
             print('Your camel is getting tired.')
         elif camel_tiredness > 8 and not done:
             print('Your camel has died to exhaustion.')
             done = True
 
+# Call main method
 main()
