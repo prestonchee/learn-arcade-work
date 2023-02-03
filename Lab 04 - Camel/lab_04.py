@@ -31,21 +31,21 @@ def main():
         print('Q. Quit.')
 
         # prompt for user choice
-        user_choice = input('What is your choice')
+        user_choice = input('What is your choice.')
 
-        # run if loops for each choices made and the consequences of those choices
+        # run if loops for each choice made and the consequences of those choices
         if user_choice.upper() == 'Q':
             done = True
-            print('Thanks for Playing ')
+            print('Thanks for Playing.')
 
         elif user_choice.upper() == 'E':
-            print('Mile Travel :', miles_traveled)
+            print('Miles Travel :', miles_traveled)
             print('Drinks in canteen:', canteen_amount)
-            print('The natives are', miles_traveled - natives_distance, 'miles behind you')
+            print('The natives are', miles_traveled - natives_distance, 'miles behind you.')
 
         elif user_choice.upper() == 'D':
             camel_tiredness = 0
-            print('The camel is happy')
+            print('The camel is happy.')
             natives_distance += 8
 
         elif user_choice.upper() == 'C':
@@ -54,52 +54,54 @@ def main():
             thirst += 1
             camel_tiredness += 3
             natives_distance += 9
+
             # generate a random number for chance to discover an oasis
             if random.randrange(19) == 7 and not done:
-                print('You have found an Oasis! Canteen will be refilled')
+                print('You have found an Oasis! Canteen will be refilled.')
                 canteen_amount = 3
 
         elif user_choice.upper() == 'B':
             miles_traveled += 9
-            print('You have traveled', miles_traveled, 'miles')
+            print('You have traveled', miles_traveled, 'miles.')
             thirst += 1
             camel_tiredness += 1
             natives_distance += 7
+
             # generate a random number for chance to discover an oasis
             if random.randrange(19) == 7 and not done:
-                print('You have found an Oasis! Canteen will be refilled')
+                print('You have found an Oasis! Canteen will be refilled.')
                 canteen_amount = 3
 
         elif user_choice.upper() == 'A':
             if canteen_amount != 0:
                 canteen_amount -= 1
                 thirst = 0
-                print('You have quenched your thirst')
+                print('You have quenched your thirst.')
             else:
-                print('You have no water in your canteen')
+                print('You have no water in your canteen.')
 
         # create warning when you ar getting to thirsty
         if 6 >= thirst > 4:
-            print('You are getting thirsty')
+            print('You are getting thirsty.')
         elif thirst > 6:
-            print('You have died of thrist')
+            print('You have died of thrist.')
             done = True
 
         # create warnings when camel is getting tired
         if 8 >= camel_tiredness > 5:
-            print('Your camel is getting tired')
+            print('Your camel is getting tired.')
         elif camel_tiredness > 8:
-            print('your camel has died to exhaustion')
+            print('Your camel has died to exhaustion.')
             done = True
 
         # create warnings when getting to thirsty
         if natives_distance >= miles_traveled:
-            print('You have been caught by the natives')
+            print('You have been caught by the natives.')
             done = True
         elif (miles_traveled - natives_distance) < 15:
             print('The natives are getting close!')
         elif miles_traveled >= 200 and not done:
-            print('Congrats you have won the game and escaped from the natives')
+            print('Congrats you have won the game and escaped from the natives!')
             done = True
 
 
