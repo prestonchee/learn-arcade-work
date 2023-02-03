@@ -15,8 +15,8 @@ def main():
 
     # initiated variables
     done = False
-    miles_traveled = 0
-    thirst = 0
+    miles_traveled = 210
+    thirst = 5
     camel_tiredness = 0
     natives_distance = -20
     canteen_amount = 3
@@ -39,7 +39,7 @@ def main():
             print('Thanks for Playing.')
 
         elif user_choice.upper() == 'E':
-            print('Miles Travel :', miles_traveled)
+            print('Miles Traveled :', miles_traveled)
             print('Drinks in canteen:', canteen_amount)
             print('The natives are', miles_traveled - natives_distance, 'miles behind you.')
 
@@ -80,21 +80,8 @@ def main():
             else:
                 print('You have no water in your canteen.')
 
-        # create warning when you ar getting to thirsty
-        if 6 >= thirst > 4:
-            print('You are getting thirsty.')
-        elif thirst > 6:
-            print('You have died of thrist.')
-            done = True
-
-        # create warnings when camel is getting tired
-        if 8 >= camel_tiredness > 5:
-            print('Your camel is getting tired.')
-        elif camel_tiredness > 8:
-            print('Your camel has died to exhaustion.')
-            done = True
-
-        # create warnings when getting to thirsty
+        # create warnings if the native are close or have caught you, or if you have escaped
+        # Put this first so if you win the game won't print out that you are tired, ect..
         if natives_distance >= miles_traveled:
             print('You have been caught by the natives.')
             done = True
@@ -104,5 +91,18 @@ def main():
             print('Congrats you have won the game and escaped from the natives!')
             done = True
 
+        # create warning when you ar getting to thirsty
+        if 6 >= thirst > 4 and not done:
+            print('You are getting thirsty.')
+        elif thirst > 6and not done:
+            print('You have died of thrist.')
+            done = True
+
+        # create warnings when camel is getting tired
+        if 8 >= camel_tiredness > 5 and not done:
+            print('Your camel is getting tired.')
+        elif camel_tiredness > 8 and not done:
+            print('Your camel has died to exhaustion.')
+            done = True
 
 main()
