@@ -6,14 +6,14 @@ Camel Game
 """
 import random
 
-#main method
+# main method
 def main():
     print('Welcome to Camel!')
     print('You have stolen a camel to make your way across the great Mobi desert.')
     print('The natives want their camel back and are chasing you down! Survive your')
     print('desert trek and out run the natives.')
 
-    #initiated variables
+    # initiated variables
     done = False
     miles_traveled = 0
     thirst = 0
@@ -21,7 +21,7 @@ def main():
     natives_distance = -20
     canteen_amount = 3
 
-    #main loop runs until done is true
+    # main loop runs until done is true
     while not done:
         print('A. Drink from your canteen.')
         print('B. Ahead moderate speed.')
@@ -30,40 +30,46 @@ def main():
         print('E. Status check.')
         print('Q. Quit.')
 
-        #prompt for user choice
+        # prompt for user choice
         user_choice = input('What is your choice')
 
-        #run if loops for each choices made and the consequences of those choices
+        # run if loops for each choices made and the consequences of those choices
         if user_choice.upper() == 'Q':
             done = True
             print('Thanks for Playing ')
+
         elif user_choice.upper() == 'E':
             print('Mile Travel :', miles_traveled)
             print('Drinks in canteen:', canteen_amount)
             print('The natives are', miles_traveled - natives_distance, 'miles behind you')
-            print(thirst)
+
         elif user_choice.upper() == 'D':
             camel_tiredness = 0
             print('The camel is happy')
             natives_distance += 8
+
         elif user_choice.upper() == 'C':
             miles_traveled += 14
             print('You have traveled', miles_traveled, 'miles')
             thirst += 1
             camel_tiredness += 3
             natives_distance += 9
+            # generate a random number for chance to discover an oasis
             if random.randrange(19) == 7 and not done:
                 print('You have found an Oasis! Canteen will be refilled')
                 canteen_amount = 3
+
         elif user_choice.upper() == 'B':
             miles_traveled += 9
             print('You have traveled', miles_traveled, 'miles')
             thirst += 1
             camel_tiredness += 1
             natives_distance += 7
+            # generate a random number for chance to discover an oasis
             if random.randrange(19) == 7 and not done:
                 print('You have found an Oasis! Canteen will be refilled')
                 canteen_amount = 3
+
         elif user_choice.upper() == 'A':
             if canteen_amount != 0:
                 canteen_amount -= 1
@@ -95,8 +101,6 @@ def main():
         elif miles_traveled >= 200 and not done:
             print('Congrats you have won the game and escaped from the natives')
             done = True
-
-
 
 
 main()
