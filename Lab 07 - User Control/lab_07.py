@@ -95,7 +95,6 @@ class Fish:
         # Load sound effect
         self.error_sound = arcade.load_sound("error.ogg")
 
-
     # Draw fish based off of instance variables
     def draw(self):
         arcade.draw_triangle_filled(self.position_x, self.position_y,
@@ -129,7 +128,6 @@ class Fish:
             arcade.play_sound(self.error_sound)
 
 
-
 # Creates the second main class to run the game.
 class MyGame(arcade.Window):
 
@@ -146,8 +144,6 @@ class MyGame(arcade.Window):
         self.sun = Sun(50, 50, 20, arcade.color.YELLOW)
 
         self.fish = Fish(450, 210, 0, 0, 13, arcade.color.PINK)
-
-
 
     # On screen items are drawn
     def on_draw(self):
@@ -179,8 +175,7 @@ class MyGame(arcade.Window):
         elif key == arcade.key.DOWN:
             self.fish.change_y = -MOVEMENT_SPEED
 
-
-
+    # sets the fish changes to 0
     def on_key_release(self, key, modifiers):
 
         if key == arcade.key.LEFT or key == arcade.key.RIGHT:
