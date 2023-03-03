@@ -67,6 +67,18 @@ class Sun:
                                   self.position_y,
                                   self.radius,
                                   self.color)
+        arcade.draw_triangle_filled(self.position_x + 10, self.position_y + 10,
+                                    self.position_x, self.position_y + 40,
+                                    self.position_x - 10, self.position_y + 10, self.color)
+        arcade.draw_triangle_filled(self.position_x + 10, self.position_y + 10,
+                                    self.position_x - 40, self.position_y,
+                                    self.position_x - 10, self.position_y - 10, self.color)
+        arcade.draw_triangle_filled(self.position_x - 10, self.position_y - 10,
+                                    self.position_x, self.position_y - 40,
+                                    self.position_x + 10, self.position_y - 10, self.color)
+        arcade.draw_triangle_filled(self.position_x - 10, self.position_y - 10,
+                                    self.position_x + 40, self.position_y,
+                                    self.position_x + 10, self.position_y + 10, self.color)
 
 
 # Creates fish class object
@@ -79,6 +91,10 @@ class Fish:
         self.change_y = change_y
         self.radius = radius
         self.color = color
+
+        # Load sound effect
+        self.error_sound = arcade.load_sound("error.ogg")
+
 
     # Draw fish based off of instance variables
     def draw(self):
@@ -97,15 +113,21 @@ class Fish:
         # Make sure fish does not move off-screen
         if self.position_x < self.radius:
             self.position_x = self.radius
+            # Make a noise when the fish hits the border of the screen
+            arcade.play_sound(self.error_sound)
 
         if self.position_x > SCREEN_WIDTH - self.radius:
             self.position_x = SCREEN_WIDTH - self.radius
+            arcade.play_sound(self.error_sound)
 
         if self.position_y < self.radius:
             self.position_y = self.radius
+            arcade.play_sound(self.error_sound)
 
         if self.position_y > SCREEN_HEIGHT - self.radius:
             self.position_y = SCREEN_HEIGHT - self.radius
+            arcade.play_sound(self.error_sound)
+
 
 
 # Creates the second main class to run the game.
@@ -124,6 +146,8 @@ class MyGame(arcade.Window):
         self.sun = Sun(50, 50, 20, arcade.color.YELLOW)
 
         self.fish = Fish(450, 210, 0, 0, 13, arcade.color.PINK)
+
+
 
     # On screen items are drawn
     def on_draw(self):
@@ -154,6 +178,8 @@ class MyGame(arcade.Window):
             self.fish.change_y = MOVEMENT_SPEED
         elif key == arcade.key.DOWN:
             self.fish.change_y = -MOVEMENT_SPEED
+
+
 
     def on_key_release(self, key, modifiers):
 
