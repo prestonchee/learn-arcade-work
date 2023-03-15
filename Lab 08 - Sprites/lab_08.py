@@ -55,7 +55,7 @@ class Fish(arcade.Sprite):
 
     def update(self):
 
-        # Move the fich
+        # Move the fish
         self.center_x += self.change_x
         self.center_y += self.change_y
 
@@ -85,6 +85,7 @@ class MyGame(arcade.Window):
         self.player_list = None
         self.fish_list = None
         self.shot_list = None
+        self.good_list = None
 
         # Set up the player info
         self.player_sprite = None
@@ -102,6 +103,8 @@ class MyGame(arcade.Window):
         self.player_list = arcade.SpriteList()
         self.fish_list = arcade.SpriteList()
         self.shot_list = arcade.SpriteList()
+        self.good_list = arcade.SpriteList()
+
 
         # Score
         self.score = 0
@@ -145,6 +148,7 @@ class MyGame(arcade.Window):
             shot.circle_angle = random.random() * 2 * math.pi
 
             self.shot_list.append(shot)
+
     def on_draw(self):
         """ Draw everything """
         arcade.start_render()
@@ -153,36 +157,55 @@ class MyGame(arcade.Window):
         self.shot_list.draw()
 
         # Put the text on the screen.
-        output = f"Score: {self.score}"
-        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
+
+
+        if len(self.fish_list) > 0:
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
+        else:
+            output = "Game Over"
+            arcade.draw_text(output, (SCREEN_WIDTH / 2) - 50, SCREEN_HEIGHT / 2, arcade.color.RED, 20)
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, (SCREEN_WIDTH / 2) - 25, (SCREEN_HEIGHT / 2) - 50, arcade.color.WHITE, 15)
+
 
     def on_mouse_motion(self, x, y, dx, dy):
         """ Handle Mouse Motion """
 
         # Move the center of the player sprite to match the mouse x, y
-        self.player_sprite.center_x = x
-        self.player_sprite.center_y = y
+        if len(self.fish_list) > 0:
+            self.player_sprite.center_x = x
+            self.player_sprite.center_y = y
 
     def update(self, delta_time):
         """ Movement and game logic """
 
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
-        self.fish_list.update()
-        self.shot_list.update()
+
+        if len(self.fish_list) > 0:
+            self.fish_list.update()
+            self.shot_list.update()
 
         # Generate a list of all sprites that collided with the player.
-        good_list = arcade.check_for_collision_with_list(self.player_sprite,
+            self.good_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                         self.fish_list)
-        bad_list = arcade.check_for_collision_with_list(self.player_sprite,
+            bad_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                         self.shot_list)
 
         # Loop through each colliding sprite, remove it, and add to the score.
-        for fish in good_list:
-            fish.remove_from_sprite_lists()
-            self.score += 1
-        for shot in bad_list:
-            self.score -= 1
+            for fish in self.good_list:
+                fish.remove_from_sprite_lists()
+                self.score += 1
+            for shot in bad_list:
+                self.score -= 1
+                shot.circle_center_x = random.randrange(SCREEN_HEIGHT)
+                shot.circle_center_y = random.randrange(SCREEN_WIDTH)
+
+
+
+
+
 
 
 def main():
@@ -192,5 +215,5 @@ def main():
     arcade.run()
 
 
-if __name__ == "__main__":
-    main()
+
+main()
