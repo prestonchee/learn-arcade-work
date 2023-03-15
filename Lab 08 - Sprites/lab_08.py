@@ -105,7 +105,6 @@ class MyGame(arcade.Window):
         self.shot_list = arcade.SpriteList()
         self.good_list = arcade.SpriteList()
 
-
         # Score
         self.score = 0
 
@@ -158,7 +157,6 @@ class MyGame(arcade.Window):
 
         # Put the text on the screen.
 
-
         if len(self.fish_list) > 0:
             output = f"Score: {self.score}"
             arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
@@ -167,7 +165,6 @@ class MyGame(arcade.Window):
             arcade.draw_text(output, (SCREEN_WIDTH / 2) - 50, SCREEN_HEIGHT / 2, arcade.color.RED, 20)
             output = f"Score: {self.score}"
             arcade.draw_text(output, (SCREEN_WIDTH / 2) - 25, (SCREEN_HEIGHT / 2) - 50, arcade.color.WHITE, 15)
-
 
     def on_mouse_motion(self, x, y, dx, dy):
         """ Handle Mouse Motion """
@@ -189,9 +186,9 @@ class MyGame(arcade.Window):
 
         # Generate a list of all sprites that collided with the player.
             self.good_list = arcade.check_for_collision_with_list(self.player_sprite,
-                                                        self.fish_list)
+                                                                  self.fish_list)
             bad_list = arcade.check_for_collision_with_list(self.player_sprite,
-                                                        self.shot_list)
+                                                            self.shot_list)
 
         # Loop through each colliding sprite, remove it, and add to the score.
             for fish in self.good_list:
@@ -203,17 +200,11 @@ class MyGame(arcade.Window):
                 shot.circle_center_y = random.randrange(SCREEN_WIDTH)
 
 
-
-
-
-
-
 def main():
     """ Main method """
     window = MyGame()
     window.setup()
     arcade.run()
-
 
 
 main()
