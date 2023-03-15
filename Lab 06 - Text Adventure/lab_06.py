@@ -1,16 +1,20 @@
 # created a room class and attributes
 class Room:
+
     def __init__(self, description, north, east, south, west):
-        # Attributes associated to the class room
+        # Attributes associated to the classroom
         self.description = description
         self.north = north
         self.east = east
         self.south = south
         self.west = west
+
 # main function the runs the program
 def main():
+
     # Created a list to add the different rooms to.
     room_list = []
+
     # Create the rooms and how they are attached to the other rooms, directional wise.
     room = Room('You are at the entrance. \nThere is a passage to the north', 1, None, None, None)
     room_list.append(room)
@@ -24,6 +28,7 @@ def main():
     room_list.append(room4)
     room5 = Room('Congrats you have found the bathroom! \nYou can exit to the east.', None, 4, None, None)
     room_list.append(room5)
+
     # Set the starting point at the first room created or in the case room 0
     current_room = 0
     done = False
@@ -42,32 +47,37 @@ def main():
             next_room = room_list[current_room].north
             # If the user directs to game a none existing directions tell them to try again,
             # else set the current room the one desired.
-            if next_room == None:
+            if next_room is None:
                 print('There is nothing in that direction.')
             else:
                 current_room = next_room
+
         elif user_choice.upper() == 'E' or user_choice.upper() == 'EAST':
             next_room = room_list[current_room].east
-            if next_room == None:
+            if next_room is None:
                 print('There is nothing in that direction.')
             else:
                 current_room = next_room
+
         elif user_choice.upper() == 'S' or user_choice.upper() == 'SOUTH':
             next_room = room_list[current_room].south
-            if next_room == None:
+            if next_room is None:
                 print('There is nothing in that direction.')
             else:
                 current_room = next_room
+
         elif user_choice.upper() == 'W' or user_choice.upper() == 'WEST':
             next_room = room_list[current_room].west
-            if next_room == None:
+            if next_room is None:
                 print('There is nothing in that direction.')
             else:
                 current_room = next_room
+
         # Allow the user to quit the game
         elif user_choice.upper() == 'QUIT' or user_choice.upper() == 'Q':
             print('Thanks for Playing!')
             done = True
+
         # If nothing the user types corresponds to game directions ask to try again
         else:
             print('Sorry input not recognized, please try again.')
