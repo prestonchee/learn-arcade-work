@@ -96,6 +96,8 @@ class MyGame(arcade.Window):
 
         arcade.set_background_color(arcade.color.OCEAN_BOAT_BLUE)
 
+        self.error_sound = arcade.load_sound("pistol.wav")
+
     def setup(self):
         """ Set up the game and initialize the variables. """
 
@@ -198,6 +200,7 @@ class MyGame(arcade.Window):
                 self.score -= 1
                 shot.circle_center_x = random.randrange(SCREEN_HEIGHT)
                 shot.circle_center_y = random.randrange(SCREEN_WIDTH)
+                arcade.play_sound(self.error_sound)
 
 
 def main():
