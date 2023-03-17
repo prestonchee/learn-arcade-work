@@ -85,7 +85,7 @@ class MyGame(arcade.Window):
     def __init__(self):
 
         # Parent class initializer
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Sprite Example")
+        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Lab 8")
 
         # Sprite List Variables
         self.player_list = None
@@ -103,6 +103,7 @@ class MyGame(arcade.Window):
         arcade.set_background_color(arcade.color.OCEAN_BOAT_BLUE)
 
         # Create sound variable
+        # Sound from Kennel.nl
         self.gun_shot = arcade.load_sound("pistol.wav")
 
     # Main game setup
@@ -115,6 +116,7 @@ class MyGame(arcade.Window):
         self.good_list = arcade.SpriteList()
 
         # Set up the player
+        # Image from Kennel.nl
         self.player_sprite = arcade.Sprite("duck.png", SPRITE_SCALING_PLAYER)
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 50
@@ -124,6 +126,7 @@ class MyGame(arcade.Window):
         for i in range(FISH_COUNT):
 
             # Create the fish instance
+            # Image from Kennel.nl
             fish = Fish("fish.png", SPRITE_SCALING_FISH)
 
             # Set fish location
@@ -137,6 +140,7 @@ class MyGame(arcade.Window):
 
         for j in range(SHOT_COUNT):
             # Create the fish instance
+            # Image from Kennel.nl
             shot = Shot("shot.png", SPRITE_SCALING_SHOT / 3)
 
             # Set center of the circle the shot will orbit
@@ -171,7 +175,6 @@ class MyGame(arcade.Window):
 
     # Allow mouse movement
     def on_mouse_motion(self, x, y, dx, dy):
-        """ Handle Mouse Motion """
 
         # Allow the person to move the good sprite until all good sprites are gone
         if len(self.fish_list) > 0:
