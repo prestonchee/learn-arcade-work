@@ -1,4 +1,3 @@
-import random
 import arcade
 from pyglet.math import Vec2
 
@@ -16,7 +15,7 @@ VIEWPORT_MARGIN = 220
 CAMERA_SPEED = 0.1
 
 # How fast the character moves
-PLAYER_MOVEMENT_SPEED = 7
+PLAYER_MOVEMENT_SPEED = 5
 
 
 class MyGame(arcade.Window):
@@ -64,42 +63,89 @@ class MyGame(arcade.Window):
         self.player_list.append(self.player_sprite)
 
         # -- Set up several columns of walls
-        #border wall
-        for x in range (380, 1596, 32):
+        # border wall
+        # bottom wall
+        for x in range(380, 1596, 32):
             border_wall = arcade.Sprite("outer-wall.png", 2)
             border_wall.center_x = x
             border_wall.center_y = 250
             self.wall_list.append(border_wall)
-            for x in range(250, 1300, 32):
+            # left wall
+            for x in range(250, 1364, 32):
                 border_wall = arcade.Sprite("outer-wall.png", 2)
                 border_wall.center_x = 380
                 border_wall.center_y = x
                 self.wall_list.append(border_wall)
-            for x in range(380, 1600, 32):
+            # right wall
+            for x in range(250, 1364, 32):
                 border_wall = arcade.Sprite("outer-wall.png", 2)
-                border_wall.center_x = x
-                border_wall.center_y = 1306
-                self.wall_list.append(border_wall)
-            for x in range(250, 1300, 32):
-                border_wall = arcade.Sprite("outer-wall.png", 2)
-                border_wall.center_x = 1596
+                border_wall.center_x = 1564
                 border_wall.center_y = x
                 self.wall_list.append(border_wall)
+            # top wall
+            for x in range(380, 1596, 32):
+                border_wall = arcade.Sprite("outer-wall.png", 2)
+                border_wall.center_x = x
+                border_wall.center_y = 1348
+                self.wall_list.append(border_wall)
+
         # Table walls
-        for i in range (440, 1536, 64):
-            table_wall_list = [[i,364]]
-            for coordinate in table_wall_list:
-                wall = arcade.Sprite("table.png", .1)
-                wall.center_x = coordinate[0]
-                wall.center_y = coordinate[1]
-                self.wall_list.append(wall)
+        for i in range(440, 1536, 63):
+            for j in range(314, 1236, 70):
+                table_wall_list = [[i, j]]
+                for coordinate in table_wall_list:
+                    wall = arcade.Sprite("table.png", .1)
+                    wall.center_x = coordinate[0]
+                    wall.center_y = coordinate[1]
+                    # bottom row - row 0
+                    if 760 > i > 500 or 820 < i < 940 or 1000 < i < 1500:
+                        if 330 < j < 400:
+                            self.wall_list.append(wall)
+                    # row 1
+                    if 550 > i > 440 or 650 < i < 850 or 1000 < i < 1250 or 1300 < i < 1536:
+                        if 470 < j < 540:
+                            self.wall_list.append(wall)
+                    # row 2
+                    if 400 < i < 850 or 950 < i < 1200 or 1250 < i < 1500:
+                        if 610 < j < 680:
+                            self.wall_list.append(wall)
+                    # row 3
+                    if 500 < i < 750 or 900 < i < 1100 or 1200 < i < 1350:
+                        if 750 < j < 830:
+                            self.wall_list.append(wall)
+                    # row 4
+                    if 600 < i < 850 or 950 < i < 1300 or 1400 < i < 1536:
+                        if 900 < j < 970:
+                            self.wall_list.append(wall)
+                    # row 5
+                    if 400 < i < 1200:
+                        if 1040 < j < 1110:
+                            self.wall_list.append(wall)
+                    # row 6
+                    if 500 < i < 750 or 900 < i < 1100 or 1200 < i < 1350 or 1400 < i < 1536:
+                        if 1180 < j < 1250:
+                            self.wall_list.append(wall)
 
-
+        # Add chairs
+        chair_list = [[550, 525],
+                      [950, 525],
+                      [1370, 805],
+                      [1212, 805],
+                      [820, 805],
+                      [500, 945],
+                      [1370, 1085],
+                      [1400, 1085],
+                      [1005, 1160]]
+        for coordinate in chair_list:
+            chair = arcade.Sprite("chair.png", .102)
+            chair.center_x = coordinate[0]
+            chair.center_y = coordinate[1]
+            self.wall_list.append(chair)
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
 
         # Set the background color
-        arcade.set_background_color(arcade.color.YELLOW)
+        arcade.set_background_color(arcade.color.FLORAL_WHITE)
 
     def on_draw(self):
         """ Render the screen. """
@@ -128,7 +174,6 @@ class MyGame(arcade.Window):
         arcade.draw_text(text, 10, 10, arcade.color.BLACK_BEAN, 20)
 
     def on_key_press(self, key, modifiers):
-        """Called whenever a key is pressed. """
 
         if key == arcade.key.UP:
             self.up_pressed = True
