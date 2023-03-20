@@ -1,102 +1,116 @@
+"""
+food collecting game
+Preston Chee
+3/20/2023
+CS 1400
+"""
+import random
 import arcade
 from pyglet.math import Vec2
 
 SPRITE_SCALING = 1
 
-DEFAULT_SCREEN_WIDTH = 800
-DEFAULT_SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Sprite Move with Scrolling Screen Example"
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+SCREEN_TITLE = "NOM NOM GAME"
+NUMBER_OF_FOOD = 20
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
 VIEWPORT_MARGIN = 220
 
-# How fast the camera pans to the player. 1.0 is instant.
+# camera pan speed
 CAMERA_SPEED = 0.1
 
-# How fast the character moves
+# Character speed
 PLAYER_MOVEMENT_SPEED = 5
 
-
+# game class
 class MyGame(arcade.Window):
-    """ Main application class. """
 
     def __init__(self, width, height, title):
-        """
-        Initializer
-        """
+
         super().__init__(width, height, title, resizable=True)
 
         # Sprite lists
         self.player_list = None
         self.wall_list = None
+        self.food_list = None
 
         # Set up the player
         self.player_sprite = None
+        self.score = 0
 
-        # Physics engine so we don't run into walls.
+        # Physics engine
         self.physics_engine = None
 
-        # Track the current state of what key is pressed
+        # Key press tracker
         self.left_pressed = False
         self.right_pressed = False
         self.up_pressed = False
         self.down_pressed = False
 
-        # Create the cameras. One for the GUI, one for the sprites.
-        # We scroll the 'sprite world' but not the GUI.
-        self.camera_sprites = arcade.Camera(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT)
-        self.camera_gui = arcade.Camera(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT)
+        # Create cameras.
+        self.camera_sprites = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.camera_gui = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
 
+        # Initialized noise variable
+        # sound produced by me
+        self.bite = arcade.load_sound("bite.mp3")
+
+    # setup walls and sprites
     def setup(self):
-        """ Set up the game and initialize the variables. """
 
         # Sprite lists
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
+        self.food_list = arcade.SpriteList()
 
         # Set up the player
-        self.player_sprite = arcade.Sprite(":resources:images/animated_characters/female_person/femalePerson_idle.png",
+        # player image found from Kenny.nl
+        self.player_sprite = arcade.Sprite("adventurer.png",
                                            scale=0.6)
         self.player_sprite.center_x = 432
         self.player_sprite.center_y = 301
         self.player_list.append(self.player_sprite)
 
-        # -- Set up several columns of walls
-        # border wall
-        # bottom wall
+        # border walls
+        # bottom wall, outer wall.png taken from Kenney.nl
         for x in range(380, 1596, 32):
             border_wall = arcade.Sprite("outer-wall.png", 2)
             border_wall.center_x = x
             border_wall.center_y = 250
             self.wall_list.append(border_wall)
             # left wall
-            for x in range(250, 1364, 32):
+            for y in range(250, 1364, 32):
                 border_wall = arcade.Sprite("outer-wall.png", 2)
                 border_wall.center_x = 380
-                border_wall.center_y = x
+                border_wall.center_y = y
                 self.wall_list.append(border_wall)
             # right wall
-            for x in range(250, 1364, 32):
+            for z in range(250, 1364, 32):
                 border_wall = arcade.Sprite("outer-wall.png", 2)
                 border_wall.center_x = 1564
-                border_wall.center_y = x
+                border_wall.center_y = z
                 self.wall_list.append(border_wall)
             # top wall
-            for x in range(380, 1596, 32):
+            for n in range(380, 1596, 32):
                 border_wall = arcade.Sprite("outer-wall.png", 2)
-                border_wall.center_x = x
+                border_wall.center_x = n
                 border_wall.center_y = 1348
                 self.wall_list.append(border_wall)
 
         # Table walls
+        # run through each range for the x and y coordinates
         for i in range(440, 1536, 63):
             for j in range(314, 1236, 70):
                 table_wall_list = [[i, j]]
+                # table.png taken from freepik.com
                 for coordinate in table_wall_list:
                     wall = arcade.Sprite("table.png", .1)
                     wall.center_x = coordinate[0]
                     wall.center_y = coordinate[1]
+                    # create conditions to place tables in a range going row by row
                     # bottom row - row 0
                     if 760 > i > 500 or 820 < i < 940 or 1000 < i < 1500:
                         if 330 < j < 400:
@@ -127,6 +141,7 @@ class MyGame(arcade.Window):
                             self.wall_list.append(wall)
 
         # Add chairs
+        # Second obstacles placed by a list
         chair_list = [[550, 525],
                       [950, 525],
                       [1370, 805],
@@ -137,55 +152,82 @@ class MyGame(arcade.Window):
                       [1400, 1085],
                       [1005, 1160]]
         for coordinate in chair_list:
+            # chair.png taken from freepik.com
             chair = arcade.Sprite("chair.png", .102)
             chair.center_x = coordinate[0]
             chair.center_y = coordinate[1]
             self.wall_list.append(chair)
 
+        for i in range(random.randrange(20, 40)):
+            # sushi.png taken from pngtree.com
+            food = arcade.Sprite("sushi.png", .06)
+
+            food_placed_success = False
+
+            # place the food as long as it does not overlap with the walls or obstacles
+            while not food_placed_success:
+
+                food.center_x = random.randrange(400, 1536)
+                food.center_y = random.randrange(314, 1364)
+
+                wall_hit_list = arcade.check_for_collision_with_list(food, self.wall_list)
+
+                food_hit_list = arcade.check_for_collision_with_list(food, self.food_list)
+
+                if len(wall_hit_list) == 0 and len(food_hit_list) == 0:
+
+                    food_placed_success = True
+
+            self.food_list.append(food)
+
+        # keeps the player from going through walls
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
 
         # Set the background color
         arcade.set_background_color(arcade.color.FLORAL_WHITE)
 
+    # things to draw on screen
     def on_draw(self):
-        """ Render the screen. """
 
-        # This command has to happen before we start drawing
+        # make sure that it starts clean
         self.clear()
 
-        # Select the camera we'll use to draw all our sprites
+        # main camera that draws sprites
         self.camera_sprites.use()
 
-        # Draw all the sprites.
+        # Draw sprites.
         self.wall_list.draw()
         self.player_list.draw()
+        self.food_list.draw()
 
-        # Select the (unscrolled) camera for our GUI
+        # displays our gui on screen
         self.camera_gui.use()
 
-        # Draw the GUI
-        arcade.draw_rectangle_filled(self.width // 2,
-                                     20,
-                                     self.width,
-                                     40,
-                                     arcade.color.ALMOND)
-        text = f"Scroll value: ({self.camera_sprites.position[0]:5.1f}, " \
-               f"{self.camera_sprites.position[1]:5.1f})"
-        arcade.draw_text(text, 10, 10, arcade.color.BLACK_BEAN, 20)
+        # Draw score in bottom corner until all food is gone
+        if len(self.food_list) > 0:
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 10, 20, arcade.color.BLACK, 14)
+        # once food is gone display game over and the final score
+        else:
+            output = "Game Over"
+            arcade.draw_text(output, (SCREEN_WIDTH / 2) - 50, SCREEN_HEIGHT / 2, arcade.color.RED, 20)
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, (SCREEN_WIDTH / 2) - 25, (SCREEN_HEIGHT / 2) - 50, arcade.color.BLACK, 15)
 
     def on_key_press(self, key, modifiers):
 
-        if key == arcade.key.UP:
-            self.up_pressed = True
-        elif key == arcade.key.DOWN:
-            self.down_pressed = True
-        elif key == arcade.key.LEFT:
-            self.left_pressed = True
-        elif key == arcade.key.RIGHT:
-            self.right_pressed = True
+        # once the food list is empty allow for no more input
+        if len(self.food_list) > 0:
+            if key == arcade.key.UP:
+                self.up_pressed = True
+            elif key == arcade.key.DOWN:
+                self.down_pressed = True
+            elif key == arcade.key.LEFT:
+                self.left_pressed = True
+            elif key == arcade.key.RIGHT:
+                self.right_pressed = True
 
     def on_key_release(self, key, modifiers):
-        """Called when the user releases a key. """
 
         if key == arcade.key.UP:
             self.up_pressed = False
@@ -197,12 +239,12 @@ class MyGame(arcade.Window):
             self.right_pressed = False
 
     def on_update(self, delta_time):
-        """ Movement and game logic """
 
         # Calculate speed based on the keys pressed
         self.player_sprite.change_x = 0
         self.player_sprite.change_y = 0
 
+        # how fast to adjust player position change based of off movement speed
         if self.up_pressed and not self.down_pressed:
             self.player_sprite.change_y = PLAYER_MOVEMENT_SPEED
         elif self.down_pressed and not self.up_pressed:
@@ -212,41 +254,41 @@ class MyGame(arcade.Window):
         elif self.right_pressed and not self.left_pressed:
             self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
 
-        # Call update on all sprites (The sprites don't do much in this
-        # example though.)
+        # Check to see if player has collided with a food item
+        hit_list = arcade.check_for_collision_with_list(self.player_sprite,
+                                                        self.food_list)
+
+        # if the player has collided remove the food and increase score, also make a noise.
+        for food in hit_list:
+            food.remove_from_sprite_lists()
+            self.score += 1
+            arcade.play_sound(self.bite)
+
+        # update all sprites
         self.physics_engine.update()
 
         # Scroll the screen to the player
         self.scroll_to_player()
 
     def scroll_to_player(self):
-        """
-        Scroll the window to the player.
 
-        if CAMERA_SPEED is 1, the camera will immediately move to the desired position.
-        Anything between 0 and 1 will have the camera move to the location with a smoother
-        pan.
-        """
-
+        # scroll camera to the player
         position = Vec2(self.player_sprite.center_x - self.width / 2,
                         self.player_sprite.center_y - self.height / 2)
         self.camera_sprites.move_to(position, CAMERA_SPEED)
 
     def on_resize(self, width, height):
-        """
-        Resize window
-        Handle the user grabbing the edge and resizing the window.
-        """
+        # adjust the window to same size as the camera moves with player
+
         self.camera_sprites.resize(int(width), int(height))
         self.camera_gui.resize(int(width), int(height))
 
 
 def main():
-    """ Main function """
-    window = MyGame(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT, SCREEN_TITLE)
+
+    window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     window.setup()
     arcade.run()
 
 
-if __name__ == "__main__":
-    main()
+main()
