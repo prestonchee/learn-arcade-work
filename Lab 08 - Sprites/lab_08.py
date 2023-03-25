@@ -8,6 +8,7 @@ import random
 import arcade
 import math
 
+# All pictures and sound files taken from Kenney.nl
 # Constant Variables
 SPRITE_SCALING_PLAYER = 0.5
 SPRITE_SCALING_FISH = 0.5

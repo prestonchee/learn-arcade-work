@@ -56,7 +56,7 @@ class MyGame(arcade.Window):
 
         # Initialized noise variable
         # sound produced by me
-        self.bite = arcade.load_sound("bite.mp3")
+        self.bite = arcade.load_sound("bite.wav")
 
     # setup walls and sprites
     def setup(self):
