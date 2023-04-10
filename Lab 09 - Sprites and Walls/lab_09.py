@@ -56,7 +56,7 @@ class MyGame(arcade.Window):
 
         # Initialized noise variable
         # sound produced by me
-        self.bite = arcade.load_sound("bite.wav")
+        self.bite = arcade.load_sound("../Lab 12 - Final Lab/bite.wav")
 
     # setup walls and sprites
     def setup(self):
@@ -68,7 +68,7 @@ class MyGame(arcade.Window):
 
         # Set up the player
         # player image found from Kenny.nl
-        self.player_sprite = arcade.Sprite("adventurer.png",
+        self.player_sprite = arcade.Sprite("../Lab 12 - Final Lab/adventurer.png",
                                            scale=0.6)
         self.player_sprite.center_x = 432
         self.player_sprite.center_y = 301
@@ -77,25 +77,25 @@ class MyGame(arcade.Window):
         # border walls
         # bottom wall, outer wall.png taken from Kenney.nl
         for x in range(380, 1596, 32):
-            border_wall = arcade.Sprite("outer-wall.png", 2)
+            border_wall = arcade.Sprite("../Lab 12 - Final Lab/outer-wall.png", 2)
             border_wall.center_x = x
             border_wall.center_y = 250
             self.wall_list.append(border_wall)
             # left wall
             for y in range(250, 1364, 32):
-                border_wall = arcade.Sprite("outer-wall.png", 2)
+                border_wall = arcade.Sprite("../Lab 12 - Final Lab/outer-wall.png", 2)
                 border_wall.center_x = 380
                 border_wall.center_y = y
                 self.wall_list.append(border_wall)
             # right wall
             for z in range(250, 1364, 32):
-                border_wall = arcade.Sprite("outer-wall.png", 2)
+                border_wall = arcade.Sprite("../Lab 12 - Final Lab/outer-wall.png", 2)
                 border_wall.center_x = 1564
                 border_wall.center_y = z
                 self.wall_list.append(border_wall)
             # top wall
             for n in range(380, 1596, 32):
-                border_wall = arcade.Sprite("outer-wall.png", 2)
+                border_wall = arcade.Sprite("../Lab 12 - Final Lab/outer-wall.png", 2)
                 border_wall.center_x = n
                 border_wall.center_y = 1348
                 self.wall_list.append(border_wall)
@@ -107,7 +107,7 @@ class MyGame(arcade.Window):
                 table_wall_list = [[i, j]]
                 # table.png taken from freepik.com
                 for coordinate in table_wall_list:
-                    wall = arcade.Sprite("table.png", .1)
+                    wall = arcade.Sprite("../Lab 12 - Final Lab/table.png", .1)
                     wall.center_x = coordinate[0]
                     wall.center_y = coordinate[1]
                     # create conditions to place tables in a range going row by row
@@ -153,14 +153,14 @@ class MyGame(arcade.Window):
                       [1005, 1160]]
         for coordinate in chair_list:
             # chair.png taken from freepik.com
-            chair = arcade.Sprite("chair.png", .102)
+            chair = arcade.Sprite("../Lab 12 - Final Lab/chair.png", .102)
             chair.center_x = coordinate[0]
             chair.center_y = coordinate[1]
             self.wall_list.append(chair)
 
         for i in range(random.randrange(20, 40)):
             # sushi.png taken from pngtree.com
-            food = arcade.Sprite("sushi.png", .06)
+            food = arcade.Sprite("../Lab 12 - Final Lab/sushi.png", .06)
 
             food_placed_success = False
 
