@@ -15,6 +15,7 @@ SCREEN_HEIGHT = 600
 SCREEN_TITLE = "NOM NOM GAME"
 NUMBER_OF_FOOD = 20
 SERVER_NUM = 10
+PIE_SPEED = 5
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
@@ -52,7 +53,8 @@ class MyGame(arcade.Window):
         self.player_list = None
         self.wall_list = None
         self.food_list = None
-        self.server_list =None
+        self.server_list = None
+        self.pie_list = None
 
         # Set up the player
         self.player_sprite = None
@@ -67,6 +69,7 @@ class MyGame(arcade.Window):
         self.right_pressed = False
         self.up_pressed = False
         self.down_pressed = False
+        self.space_pressed = False
 
         # Create cameras.
         self.camera_sprites = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -84,6 +87,7 @@ class MyGame(arcade.Window):
         self.wall_list = arcade.SpriteList()
         self.food_list = arcade.SpriteList()
         self.server_list = arcade.SpriteList()
+        self.pie_list = arcade.SpriteList()
 
         # Set up the player
         # player image found from Kenny.nl
@@ -228,6 +232,7 @@ class MyGame(arcade.Window):
         self.player_list.draw()
         self.food_list.draw()
         self.server_list.draw()
+        self.pie_list.draw()
 
         # displays our gui on screen
         self.camera_gui.use()
@@ -255,6 +260,8 @@ class MyGame(arcade.Window):
                 self.left_pressed = True
             elif key == arcade.key.RIGHT:
                 self.right_pressed = True
+            elif key == arcade.key.SPACE:
+                self.space_pressed = True
 
     def on_key_release(self, key, modifiers):
 
@@ -266,6 +273,15 @@ class MyGame(arcade.Window):
             self.left_pressed = False
         elif key == arcade.key.RIGHT:
             self.right_pressed = False
+        elif key == arcade.key.SPACE:
+            self.space_pressed = False
+            pie = arcade.Sprite("pie.png", .03)
+
+            pie.center_x = self.player_sprite.center_x
+            pie.bottom = self.player_sprite.center_y
+            pie.change_x = PIE_SPEED
+
+            self.pie_list.append(pie)
 
     def on_update(self, delta_time):
 
@@ -274,6 +290,7 @@ class MyGame(arcade.Window):
         self.player_sprite.change_y = 0
 
         self.server_list.update()
+        self.pie_list.update()
 
         # how fast to adjust player position change based of off movement speed
         if self.up_pressed and not self.down_pressed:
@@ -301,6 +318,17 @@ class MyGame(arcade.Window):
             server.reset_pos()
             self.life -= 1
 
+        for pie in self.pie_list:
+            shot_list = arcade.check_for_collision_with_list(pie, self.server_list)
+
+            for server in shot_list:
+                server.reset_pos()
+
+            if len(shot_list) > 0:
+                pie.remove_from_sprite_lists()
+
+            if pie.bottom > SCREEN_WIDTH:
+                pie.remove_from_sprite_lists
         # update all sprites
         self.physics_engine.update()
 
