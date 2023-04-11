@@ -1,7 +1,7 @@
 """
-food collecting game
+final completed game
 Preston Chee
-3/20/2023
+4/11/2023
 CS 1400
 """
 import random
@@ -13,9 +13,9 @@ SPRITE_SCALING = 1
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "NOM NOM GAME"
-NUMBER_OF_FOOD = 20
+NUMBER_OF_FOOD = 10
 SERVER_NUM = 10
-PIE_SPEED = 5
+SERVER_Y_POS = [314, 442, 585, 732, 882, 1020, 1160, 1290]
 
 # How many pixels to keep as a minimum margin between the character
 # and the edge of the screen.
@@ -27,20 +27,29 @@ CAMERA_SPEED = 0.1
 # Character speed
 PLAYER_MOVEMENT_SPEED = 5
 
+# Set server class
 class Server(arcade.Sprite):
 
     def reset_pos(self):
         self.center_x = random.randrange(380,
                                          1564)
-        self.center_y = random.randrange(250, 1348)
+        # random.choice function taken from https://www.geeksforgeeks.org/python-select-random-value-from-a-list/
+        self.center_y = random.choice(SERVER_Y_POS)
 
     def update(self):
 
+        # Move servers from left to right on screen
         self.center_x += 1
 
-        if self.right > 1570:
+        # reset position before server hit wall
+        if self.right > 1560:
             self.reset_pos()
+# Set food class
+class FOOD(arcade.Sprite):
 
+    def reset_pos(self):
+        self.center_x = random.randrange(400, 1536)
+        self.center_y = random.randrange(314, 1300)
 
 #  game class
 class MyGame(arcade.Window):
@@ -58,8 +67,11 @@ class MyGame(arcade.Window):
 
         # Set up the player
         self.player_sprite = None
-        self.life = 3
+
+        # Set other variables
+        self.life = 5
         self.score = 0
+        self.pie_speed = 0
 
         # Physics engine
         self.physics_engine = None
@@ -71,6 +83,8 @@ class MyGame(arcade.Window):
         self.down_pressed = False
         self.space_pressed = False
 
+        self.server_pos = False
+
         # Create cameras.
         self.camera_sprites = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
         self.camera_gui = arcade.Camera(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -78,6 +92,8 @@ class MyGame(arcade.Window):
         # Initialized noise variable
         # sound produced by me
         self.bite = arcade.load_sound("bite.wav")
+        # Splat.WAV taken from free-loops.com
+        self.splat = arcade.load_sound("Splat.WAV")
 
     # setup walls and sprites
     def setup(self):
@@ -181,9 +197,9 @@ class MyGame(arcade.Window):
             chair.center_y = coordinate[1]
             self.wall_list.append(chair)
 
-        for i in range(random.randrange(20, 40)):
+        for i in range(NUMBER_OF_FOOD):
             # sushi.png taken from pngtree.com
-            food = arcade.Sprite("sushi.png", .06)
+            food = FOOD("sushi.png", .06)
 
             food_placed_success = False
 
@@ -205,10 +221,13 @@ class MyGame(arcade.Window):
 
         for z in range(SERVER_NUM):
 
+            # server.png taken from pngtree.com
             server = Server("server.png", scale=0.022)
 
+            # random.choice function taken from https://www.geeksforgeeks.org/python-select-random-value-from-a-list/
             server.center_x = random.randrange(380, 1564)
-            server.center_y = random.randrange(250, 1348, 64)
+            server.center_y = random.choice(SERVER_Y_POS)
+            # server.center_y = random.randrange(250, 1348, 64)
 
             self.server_list.append(server)
 
@@ -237,11 +256,15 @@ class MyGame(arcade.Window):
         # displays our gui on screen
         self.camera_gui.use()
 
-        # Draw score in bottom corner until all food is gone
-        if len(self.food_list) > 0:
+        # Draw score in bottom corner until all life is at 0
+        if self.life > 0:
+            # Display score of food collected
             output = f"Score: {self.score}"
             arcade.draw_text(output, 10, 20, arcade.color.BLACK, 14)
-        # once food is gone display game over and the final score
+            # Display life left
+            output2 = f"Life: {self.life}"
+            arcade.draw_text(output2, 720, 20, arcade.color.BLACK, 14)
+        # once life is gone display game over and the final score
         else:
             output = "Game Over"
             arcade.draw_text(output, (SCREEN_WIDTH / 2) - 50, SCREEN_HEIGHT / 2, arcade.color.RED, 20)
@@ -250,16 +273,18 @@ class MyGame(arcade.Window):
 
     def on_key_press(self, key, modifiers):
 
-        # once the food list is empty allow for no more input
-        if len(self.food_list) > 0 or self.life > 0:
+        # once the life is 0 allow for no more input
+        if self.life > 0:
             if key == arcade.key.UP:
                 self.up_pressed = True
             elif key == arcade.key.DOWN:
                 self.down_pressed = True
             elif key == arcade.key.LEFT:
                 self.left_pressed = True
+                self.pie_speed = -7
             elif key == arcade.key.RIGHT:
                 self.right_pressed = True
+                self.pie_speed = 7
             elif key == arcade.key.SPACE:
                 self.space_pressed = True
 
@@ -273,13 +298,15 @@ class MyGame(arcade.Window):
             self.left_pressed = False
         elif key == arcade.key.RIGHT:
             self.right_pressed = False
+        # throw pie function when space bar is released
         elif key == arcade.key.SPACE:
             self.space_pressed = False
+            # pie.png taken from kindpng.com
             pie = arcade.Sprite("pie.png", .03)
 
             pie.center_x = self.player_sprite.center_x
-            pie.bottom = self.player_sprite.center_y
-            pie.change_x = PIE_SPEED
+            pie.bottom = self.player_sprite.center_y - 20
+            pie.change_x = self.pie_speed
 
             self.pie_list.append(pie)
 
@@ -308,27 +335,33 @@ class MyGame(arcade.Window):
         bad_list = arcade.check_for_collision_with_list(self.player_sprite,
                                                         self.server_list)
 
-        # if the player has collided remove the food and increase score, also make a noise.
+        # if the player has collided relocate the food and increase score, also make a noise.
         for food in hit_list:
-            food.remove_from_sprite_lists()
-            self.score += 1
             arcade.play_sound(self.bite)
+            food.reset_pos()
 
+            if self.life > 0:
+                self.score += 1
+
+        # if player collides with server relocate server and reduce life
         for server in bad_list:
             server.reset_pos()
             self.life -= 1
 
+        # If a pie collides with server make a noise, remove pie, reset server location
         for pie in self.pie_list:
             shot_list = arcade.check_for_collision_with_list(pie, self.server_list)
 
             for server in shot_list:
+                arcade.play_sound(self.splat)
                 server.reset_pos()
 
             if len(shot_list) > 0:
                 pie.remove_from_sprite_lists()
 
-            if pie.bottom > SCREEN_WIDTH:
-                pie.remove_from_sprite_lists
+            # eliminate pie if it does off screen
+            if 0 > pie.bottom > SCREEN_WIDTH:
+                pie.remove_from_sprite_lists()
         # update all sprites
         self.physics_engine.update()
 
